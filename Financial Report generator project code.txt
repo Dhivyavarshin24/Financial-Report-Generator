@@ -1,0 +1,181 @@
+Financial Report generator project code
+
+package Finance;
+
+import java.io.DataInputStream;
+import java.sql.*;
+
+public class fin {
+    Connection c;
+    PreparedStatement p;
+    DataInputStream dis = new DataInputStream(System.in);
+
+    public fin() {
+        try {
+            Class.forName("oracle.jdbc.driver.OracleDriver");
+            c = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "dhivya", "dhivya");
+            System.out.println("\n Connected to Oracle DB\n");
+        } catch (Exception e) {}
+    }
+
+    public void printTable(String table) {
+        try {
+            Statement stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM " + table);
+            ResultSetMetaData meta = rs.getMetaData();
+            int colCount = meta.getColumnCount();
+            System.out.println("\n " + table.toUpperCase() + " TABLE DATA:");
+            while (rs.next()) {
+                for (int i = 1; i <= colCount; i++) {
+                    System.out.print(meta.getColumnName(i) + ": " + rs.getString(i) + "  ");
+                }
+                System.out.println();
+            }
+            rs.close();
+            stmt.close();
+        } catch (Exception e) {}
+    }
+
+    public void addUser() {
+        try {
+            System.out.print("Enter User ID: ");
+            int id = Integer.parseInt(dis.readLine());
+            System.out.print("Enter Name: ");
+            String name = dis.readLine();
+
+            p = c.prepareStatement("INSERT INTO users (user_id, name) VALUES (?, ?)");
+            p.setInt(1, id);
+            p.setString(2, name);
+            p.executeUpdate();
+
+            System.out.println("\n User Added Successfully");
+            printTable("users");
+            p.close();
+        } catch (Exception e) {}
+    }
+
+    public void addIncome() {
+        try {
+            System.out.print("Enter Income ID: ");
+            String id = dis.readLine();
+            System.out.print("Enter User ID: ");
+            String uid = dis.readLine();
+            System.out.print("Enter Income Source: ");
+            String source = dis.readLine();
+            System.out.print("Enter Amount: ");
+            double amount = Double.parseDouble(dis.readLine());
+
+            p = c.prepareStatement("INSERT INTO incomes VALUES (?, ?, ?, ?)");
+            p.setString(1, id);
+            p.setString(2, uid);
+            p.setString(3, source);
+            p.setDouble(4, amount);
+            p.executeUpdate();
+
+            System.out.println("\n Income Added Successfully");
+            printTable("incomes");
+            p.close();
+        } catch (Exception e) {}
+    }
+
+    public void addExpense() {
+        try {
+            System.out.print("Enter Expense ID: ");
+            String id = dis.readLine();
+            System.out.print("Enter User ID: ");
+            String uid = dis.readLine();
+            System.out.print("Enter Expense Type: ");
+            String type = dis.readLine();
+            System.out.print("Enter Amount: ");
+            double amount = Double.parseDouble(dis.readLine());
+
+            p = c.prepareStatement("INSERT INTO expenses VALUES (?, ?, ?, ?)");
+            p.setString(1, id);
+            p.setString(2, uid);
+            p.setString(3, type);
+            p.setDouble(4, amount);
+            p.executeUpdate();
+
+            System.out.println("\n Expense Added Successfully");
+            printTable("expenses");
+            p.close();
+        } catch (Exception e) {}
+    }
+
+    public void addAsset() {
+        try {
+            System.out.print("Enter Asset ID: ");
+            String id = dis.readLine();
+            System.out.print("Enter User ID: ");
+            String uid = dis.readLine();
+            System.out.print("Enter Asset Type: ");
+            String type = dis.readLine();
+            System.out.print("Enter Value: ");
+            double value = Double.parseDouble(dis.readLine());
+
+            p = c.prepareStatement("INSERT INTO assets VALUES (?, ?, ?, ?)");
+            p.setString(1, id);
+            p.setString(2, uid);
+            p.setString(3, type);
+            p.setDouble(4, value);
+            p.executeUpdate();
+
+            System.out.println("\n Asset Added Successfully");
+            printTable("assets");
+            p.close();
+        } catch (Exception e) {}
+    }
+
+    public void addLiability() {
+        try {
+            System.out.print("Enter Liability ID: ");
+            String id = dis.readLine();
+            System.out.print("Enter User ID: ");
+            String uid = dis.readLine();
+            System.out.print("Enter Liability Type: ");
+            String type = dis.readLine();
+            System.out.print("Enter Amount: ");
+            double amount = Double.parseDouble(dis.readLine());
+
+            p = c.prepareStatement("INSERT INTO liabilities VALUES (?, ?, ?, ?)");
+            p.setString(1, id);
+            p.setString(2, uid);
+            p.setString(3, type);
+            p.setDouble(4, amount);
+            p.executeUpdate();
+
+            System.out.println("\n Liability Added Successfully");
+            printTable("liabilities");
+            p.close();
+        } catch (Exception e) {}
+    }
+
+    public static void main(String[] args) {
+        fin app = new fin();
+        int choice;
+        try {
+            do {
+                System.out.println("\n=== Financial Report Menu ===");
+                System.out.println("1. Add User");
+                System.out.println("2. Add Income");
+                System.out.println("3. Add Expense");
+                System.out.println("4. Add Asset");
+                System.out.println("5. Add Liability");
+                System.out.println("6. Exit");
+                System.out.print("Enter choice: ");
+                choice = Integer.parseInt(app.dis.readLine());
+
+                switch (choice) {
+                    case 1: app.addUser(); break;
+                    case 2: app.addIncome(); break;
+                    case 3: app.addExpense(); break;
+                    case 4: app.addAsset(); break;
+                    case 5: app.addLiability(); break;
+                    case 6: System.out.println(" Exiting..."); break;
+                    default: System.out.println(" Invalid choice.");
+                }
+            } while (choice != 6);
+            app.c.close();
+        } catch (Exception e) {}
+    }
+}
