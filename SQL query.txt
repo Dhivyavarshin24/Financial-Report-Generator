@@ -1,0 +1,32 @@
+CREATE TABLE Users (
+    UserID VARCHAR(10) PRIMARY KEY,
+    UserName VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Incomes (
+    IncomeID VARCHAR(10) PRIMARY KEY,
+    UserID VARCHAR(10),
+    IncomeSource VARCHAR(100),
+    IncomeAmount DECIMAL(10, 2)
+);
+
+CREATE TABLE Expenses (
+    ExpenseID VARCHAR(10) PRIMARY KEY,
+    UserID VARCHAR(10),
+    ExpenseType VARCHAR(100),
+    ExpenseAmount DECIMAL(10, 2)
+);
+
+CREATE TABLE Assets (
+    AssetID VARCHAR(10) PRIMARY KEY,
+    UserID VARCHAR(10),
+    AssetType VARCHAR(100),
+    AssetValue DECIMAL(10, 2)
+);
+
+CREATE TABLE Liabilities (
+    LiabilityID VARCHAR(10) PRIMARY KEY,
+    UserID VARCHAR(10),
+    LiabilityType VARCHAR(100),
+    LiabilityAmount DECIMAL(10, 2)
+); 
